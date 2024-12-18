@@ -299,7 +299,8 @@
       document.getElementById('chatMessages').innerHTML = ''; // Clear chat messages
 
       try {
-        const response = await fetch('http://localhost:3001/process', {
+        // Use relative URL instead of localhost
+        const response = await fetch('/process', {
           method: 'POST',
           body: formData
         });
@@ -332,7 +333,8 @@
       addChatMessage('user', userMessage);
 
       try {
-        const response = await fetch('http://localhost:3001/chat', {
+        // Use relative URL for chat as well
+        const response = await fetch('/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message: userMessage, chatHistory })

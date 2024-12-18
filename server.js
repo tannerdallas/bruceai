@@ -117,11 +117,6 @@ app.post('/chat', async (req, res) => {
     chatHistory = chatHistory.slice(-maxChatHistory);
   }
 
-  // We can assume the user is continuing with the same context from the initial instructions.
-  // If needed, prepend the instructions as part of the user's first message in chatHistory.
-  // For now, we’ll assume chatHistory contains the original message with instructions and data.
-  // If not, you may re-include instructions at the start as a user message.
-  
   const messages = [
     ...(chatHistory || []),
     { role: 'user', content: message }
@@ -147,7 +142,7 @@ app.post('/chat', async (req, res) => {
   }
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
