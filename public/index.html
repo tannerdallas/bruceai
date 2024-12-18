@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tax & Investment Expert</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- Marked.js for Markdown rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  
+  <!-- Highlight.js for syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  
+  <style>
+    /* Reset some default styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f4f6f8;
+      color: #333;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+
+    p {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #555;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    input[type="file"] {
+      margin-bottom: 15px;
+      padding: 10px;
+      border: 2px dashed #3498db;
+      border-radius: 4px;
+      width: 100%;
+      max-width: 400px;
+      cursor: pointer;
+      transition: border-color 0.3s;
+    }
+
+    input[type="file"]:hover {
+      border-color: #2980b9;
+    }
+
+    button {
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .card {
+      background-color: #fafafa;
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .chat-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .chat-container h3 {
+      margin-bottom: 15px;
+      color: #2c3e50;
+    }
+
+    #chatMessages {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+      padding-right: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message {
+      margin-bottom: 10px;
+      padding: 10px 15px;
+      border-radius: 20px;
+      max-width: 80%;
+      word-wrap: break-word;
+      position: relative;
+      clear: both;
+      white-space: pre-wrap;
+    }
+
+    .message.user {
+      background-color: #3498db;
+      color: #fff;
+      align-self: flex-end;
+      margin-left: auto;
+      border-bottom-right-radius: 0;
+    }
+
+    .message.assistant {
+      background-color: #f1f1f1;
+      color: #2c3e50;
+      align-self: flex-start;
+      margin-right: auto;
+      border-bottom-left-radius: 0;
+    }
+
+    /* Scrollbar styling */
+    #chatMessages::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #chatMessages::-webkit-scrollbar-thumb {
+      background-color: rgba(0,0,0,0.2);
+      border-radius: 3px;
+    }
+
+    #chatInput {
+      width: calc(100% - 100px);
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      outline: none;
+      font-size: 16px;
+    }
+
+    #sendChatBtn {
+      width: 80px;
+      padding: 10px;
+      margin-left: 10px;
+      background-color: #2ecc71;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #sendChatBtn:hover {
+      background-color: #27ae60;
+    }
+
+    @media (max-width: 600px) {
+      #chatInput {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+
+      #sendChatBtn {
+        width: 100%;
+        margin-left: 0;
+      }
+
+      .chat-container {
+        padding: 15px;
+      }
+    }
+
+    /* Additional styles for markdown content */
+    .message.assistant pre {
+      background-color: #272822;
+      color: #f8f8f2;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .message.assistant code {
+      background-color: #272822;
+      color: #f8f8f2;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .message.assistant table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .message.assistant table, .message.assistant th, .message.assistant td {
+      border: 1px solid #ddd;
+    }
+
+    .message.assistant th, .message.assistant td {
+      padding: 8px;
+      text-align: left;
+    }
+
+    .message.assistant th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Tax & Investment Expert</h1>
+    <p>Upload your documents, and we'll process them to provide detailed results. After processing, feel free to ask any follow-up questions.</p>
+
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" name="files" multiple required />
+      <button type="submit">Submit Files & Process</button>
+    </form>
+
+    <div id="results" class="hidden">
+      <div class="card">
+        <h2>Results</h2>
+        <div id="resultsContent"></div>
+      </div>
+
+      <div class="chat-container hidden" id="chatContainer">
+        <h3>Ask Follow-Up Questions</h3>
+        <div id="chatMessages"></div>
+        <div style="display: flex; flex-wrap: wrap;">
+          <input type="text" id="chatInput" placeholder="Type your question..." />
+          <button id="sendChatBtn">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let chatHistory = [];
+
+    // Validate files before submission
+    document.querySelector('input[type="file"]').addEventListener('change', (event) => {
+      const files = event.target.files;
+      for (const file of files) {
+        const fileExt = file.name.split('.').pop().toLowerCase();
+        if (fileExt !== 'txt') {
+          alert('Only .txt files are allowed!');
+          event.target.value = ''; // Clear invalid files
+          return;
+        }
+        if (file.size > 1 * 1024 * 1024) { // 1MB
+          alert('File size should not exceed 1MB!');
+          event.target.value = '';
+          return;
+        }
+      }
+    });
+
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+
+      // Reset chatHistory on new file submission
+      chatHistory = [];
+      document.getElementById('chatMessages').innerHTML = ''; // Clear chat messages
+
+      try {
+        const response = await fetch('http://localhost:3001/process', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Network response was not ok');
+        }
+
+        const data = await response.json();
+        document.getElementById('results').classList.remove('hidden');
+        // Use innerHTML to render the AI response with formatting
+        document.getElementById('resultsContent').innerHTML = marked.parse(data.result);
+        document.getElementById('chatContainer').classList.remove('hidden');
+
+        // After setting innerHTML, re-highlight any code blocks
+        document.querySelectorAll('pre code').forEach((block) => {
+          hljs.highlightElement(block);
+        });
+      } catch (error) {
+        alert('There was a problem processing your files: ' + error.message);
+        console.error('Error:', error);
+      }
+    });
+
+    document.getElementById('sendChatBtn').addEventListener('click', async () => {
+      const userMessage = document.getElementById('chatInput').value;
+      if (!userMessage.trim()) return;
+
+      addChatMessage('user', userMessage);
+
+      try {
+        const response = await fetch('http://localhost:3001/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: userMessage, chatHistory })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Network response was not ok');
+        }
+
+        const data = await response.json();
+        addChatMessage('assistant', data.response);
+
+        // Update chatHistory
+        chatHistory.push({ role: 'user', content: userMessage });
+        chatHistory.push({ role: 'assistant', content: data.response });
+
+        document.getElementById('chatInput').value = '';
+
+        // After adding the message, re-highlight any code blocks
+        document.querySelectorAll('.message.assistant pre code').forEach((block) => {
+          hljs.highlightElement(block);
+        });
+      } catch (error) {
+        addChatMessage('assistant', 'Sorry, there was an error processing your request.');
+        console.error('Error:', error);
+      }
+    });
+
+    // Allow sending message by pressing Enter
+    document.getElementById('chatInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('sendChatBtn').click();
+      }
+    });
+
+    function addChatMessage(role, text) {
+      const chatMessages = document.getElementById('chatMessages');
+      const msgDiv = document.createElement('div');
+      msgDiv.classList.add('message', role);
+
+      if (role === 'assistant') {
+        // Render AI response with Markdown
+        msgDiv.innerHTML = marked.parse(text);
+        msgDiv.querySelectorAll('pre code').forEach((block) => {
+          hljs.highlightElement(block);
+        });
+      } else {
+        // For user messages, display as plain text
+        msgDiv.textContent = "You: " + text;
+      }
+
+      chatMessages.appendChild(msgDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  </script>
+</body>
+</html>
